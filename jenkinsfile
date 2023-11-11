@@ -1,6 +1,9 @@
 pipeline {
-    agent any
-    environment {
+    agent {
+        docker {
+            image 'python:3.8'
+        }
+    }    environment {
         dockerImageName = 'django_from_jenkins'
     }
     stages {
