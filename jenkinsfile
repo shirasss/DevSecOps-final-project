@@ -23,13 +23,14 @@ pipeline {
                     sh 'python manage.py test'
 
                     // Check for a 200 (OK) response when trying to access the app
-                    sh 'curl -X GET http://localhost:8000/ && echo "HTTP status code: $?"'
-
-                    // If the response is not 200, fail the build
                     script {
-                        if (currentBuild.result == 'SUCCESS') {
-                            currentBuild.result = 'FAILURE'
-                            error('The app is not returning a 200 (OK) response')
+                        def httpResponse = sh(script: 'curl -X GET http://localhost:8000/', returnStatus: true).trim()
+
+                        if (httpResponse == '200') {
+                           echo 'HTTP status code: 200 (OK)'
+                        } else {
+                           currentBuild.result = 'FAILURE'
+                           error('The app is not returning a 200 (OK) response')
                         }
                     }
                 }
@@ -51,5 +52,9 @@ pipeline {
         failure {
             echo 'Pipeline failed! Send notifications or perform cleanup tasks here.'
         }
+        always {
+                // Remove the django_from_jenkinss_container by name
+                sh 'docker rm -f django_from_jenkinss_container'
+            }
     }
 }
