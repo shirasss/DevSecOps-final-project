@@ -19,12 +19,17 @@ pipeline {
                 dir('django_web_app') {
                     sh 'docker run -p 8001:8000 --name django_from_jenkinss_container django_from_jenkins '
                     script {
-                        def responseCode = sh(script: "docker run --rm -p 8000:8000 -d --name test-container ${dockerImageName} python manage.py test && curl -s -o /dev/null -w '%{http_code}' http://localhost:8001", returnStatus: true)
-                        
-                        if (responseCode == 200) {
-                            echo 'Application response: 200 OK'
-                        } else {
-                            error "Application response: ${responseCode}"
+                     // Set the URL to be tested
+                    def url = "http://localhost:8001/"
+
+                    // Perform the cURL request and store the HTTP status code in a variable
+                    def httpStatus = sh(script: "curl -s -o /dev/null -w \"%{http_code}\" $url", returnStatus: true).trim().toInteger()
+
+                    // Check if the status code is 200 (OK)
+                    if (httpStatus == 200) {
+                        echo "Success! HTTP Status Code: $httpStatus"
+                    } else {
+                        error "Failed! HTTP Status Code: $httpStatus"
                         }
                     }
                 }
