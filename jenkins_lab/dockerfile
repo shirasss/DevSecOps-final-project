@@ -23,3 +23,15 @@ RUN apt-get update && apt-get install -y google-cloud-sdk
 RUN usermod -aG docker jenkins
 EXPOSE 8080
 USER jenkins
+
+
+
+# FROM jenkins/jenkins:lts-jdk17
+# USER root
+
+
+# RUN apt-get update && apt-get install -y docker.io docker-compose google-cloud-sdk
+
+# EXPOSE 8080
+
+# USER jenkins
