@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.8'
-        }
-    }
+    agent any
     environment {
         dockerImageName = 'django_from_jenkins'
     }
@@ -27,12 +23,8 @@ pipeline {
                     // Check for a 200 (OK) response when trying to access the app
                     sh 'python manage.py test'
 
-                    // Check for a 200 (OK) response when trying to access the app
-                    script {
-                        // Use the Jenkins HTTP Request plugin to check for a 200 response
-                        def response = httpRequest(url: 'http://localhost:8000/', validResponseCodes: '200')
-                        echo "HTTP response: ${response}"
-                    }
+        // Check for a 200 (OK) response when trying to access the app
+                    httpGet url: 'http://localhost:8000/', expectStatusCode: 200
                 }
             }
         }
@@ -53,8 +45,8 @@ pipeline {
             echo 'Pipeline failed! Send notifications or perform cleanup tasks here.'
         }
         always {
-            // Remove the django_from_jenkinss_container by name
-            sh 'docker rm -f django_from_jenkinss_container'
-        }
+                // Remove the django_from_jenkinss_container by name
+                sh 'docker rm -f django_from_jenkinss_container'
+            }
     }
 }
