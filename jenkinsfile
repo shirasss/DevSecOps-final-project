@@ -7,7 +7,7 @@ pipeline {
                 // Your build steps go here
                 echo 'Building... now'
                 dir('django_web_app') {
-                        sh 'docker build -t django_from_jenkins .'
+                        sh 'docker-compose up -d'
                     }
                 // sh 'docker build -t django_from_jenkins  .'
                 // sh 'docker-compose up -d'
