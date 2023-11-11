@@ -13,13 +13,13 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('Testing the app') {
             steps {
                 echo 'Running Django tests'
                 dir('django_web_app') {
-                    sh 'docker run -p 8001:8000 django_from_jenkins '
+                    sh 'docker run -p 8001:8000 --name django_from_jenkinss_container django_from_jenkins '
                     script {
-                        def responseCode = sh(script: "docker run --rm -p 8000:8000 -d --name test-container ${dockerImageName} python manage.py test && curl -s -o /dev/null -w '%{http_code}' http://localhost:8000", returnStatus: true)
+                        def responseCode = sh(script: "docker run --rm -p 8000:8000 -d --name test-container ${dockerImageName} python manage.py test && curl -s -o /dev/null -w '%{http_code}' http://localhost:8001", returnStatus: true)
                         
                         if (responseCode == 200) {
                             echo 'Application response: 200 OK'
