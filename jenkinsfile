@@ -19,16 +19,18 @@ pipeline {
                 sh 'docker run -p 8001:8000 --name django_from_jenkinss_container django_from_jenkins '
 
                 dir('django_web_app') {
-                // Run the Django tests
-                   sh 'python manage.py test'
+                    // Run the Django tests
+                    sh 'python manage.py test'
 
-        // Check for a 200 (OK) response when trying to access the app
-                   sh 'curl -X GET http://localhost:8000/ && echo "HTTP status code: $?"'
+                    // Check for a 200 (OK) response when trying to access the app
+                    sh 'curl -X GET http://localhost:8000/ && echo "HTTP status code: $?"'
 
-        // If the response is not 200, fail the build
-                  if (currentBuild.result == 'SUCCESS') {
-                      currentBuild.result = 'FAILURE'
-                error('The app is not returning a 200 (OK) response')
+                    // If the response is not 200, fail the build
+                    script {
+                        if (currentBuild.result == 'SUCCESS') {
+                            currentBuild.result = 'FAILURE'
+                            error('The app is not returning a 200 (OK) response')
+                        }
                     }
                 }
             }
