@@ -17,20 +17,16 @@ pipeline {
             steps {
                 echo 'Running Django tests'
                 dir('django_web_app') {
-                    sh 'docker run -p 8001:8000 --name django_from_jenkinss_container django_from_jenkins '
-                    script {
-                     // Set the URL to be tested
-                    def url = "http://localhost:8001/"
+                // Run the Django tests
+                   sh 'python manage.py test'
 
-                    // Perform the cURL request and store the HTTP status code in a variable
-                    def httpStatus = sh(script: "curl -s -o /dev/null -w \"%{http_code}\" $url", returnStatus: true).trim().toInteger()
+        // Check for a 200 (OK) response when trying to access the app
+                   sh 'curl -X GET http://localhost:8000/ && echo "HTTP status code: $?"'
 
-                    // Check if the status code is 200 (OK)
-                    if (httpStatus == 200) {
-                        echo "Success! HTTP Status Code: $httpStatus"
-                    } else {
-                        error "Failed! HTTP Status Code: $httpStatus"
-                        }
+        // If the response is not 200, fail the build
+                  if (currentBuild.result == 'SUCCESS') {
+                      currentBuild.result = 'FAILURE'
+                error('The app is not returning a 200 (OK) response')
                     }
                 }
             }
