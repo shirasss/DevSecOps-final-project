@@ -6,7 +6,7 @@ pipeline {
             steps {
                 // Your build steps go here
                 echo 'Building... now'
-                sh 'docker-compose -f django_web_app/docker-compose.yml -d build'
+                sh 'docker-compose -f django_web_app/docker-compose.yml build'
 
             }
         }
