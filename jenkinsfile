@@ -20,19 +20,11 @@ pipeline {
 
                 dir('django_web_app') {
                     // Run the Django tests
+                    // Check for a 200 (OK) response when trying to access the app
                     sh 'python manage.py test'
 
-                    // Check for a 200 (OK) response when trying to access the app
-                    script {
-                        def httpResponse = sh(script: 'curl -X GET http://localhost:8000/', returnStatus: true).trim()
-
-                        if (httpResponse == '200') {
-                           echo 'HTTP status code: 200 (OK)'
-                        } else {
-                           currentBuild.result = 'FAILURE'
-                           error('The app is not returning a 200 (OK) response')
-                        }
-                    }
+        // Check for a 200 (OK) response when trying to access the app
+                    httpGet url: 'http://localhost:8000/', expectStatusCode: 200
                 }
             }
         }
