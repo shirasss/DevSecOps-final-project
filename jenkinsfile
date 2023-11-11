@@ -6,6 +6,8 @@ pipeline {
             steps {
                 // Your build steps go here
                 echo 'Building... now'
+                sh 'docker-compose -f django_web_app/docker-compose.yml -d build'
+
             }
         }
 
@@ -20,6 +22,8 @@ pipeline {
             steps {
                 // Your deployment steps go here
                 echo 'Deploying...'
+                sh 'docker-compose -f django_web_app/docker-compose.yml up -d'
+
             }
         }
     }
