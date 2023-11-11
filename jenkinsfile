@@ -21,7 +21,7 @@ pipeline {
                 dir('django_web_app') {
                     // Run the Django tests
                     // Check for a 200 (OK) response when trying to access the app
-                    sh 'python manage.py test'
+                    sh 'python3 manage.py test'
 
         // Check for a 200 (OK) response when trying to access the app
                     httpGet url: 'http://localhost:8000/', expectStatusCode: 200
@@ -39,14 +39,14 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline succeeded! Send notifications or perform additional tasks here.'
+            echo 'Pipeline succeeded!'
         }
         failure {
-            echo 'Pipeline failed! Send notifications or perform cleanup tasks here.'
+            echo 'Pipeline failed!'
         }
         always {
                 // Remove the django_from_jenkinss_container by name
-                sh 'docker rm -f django_from_jenkinss_container'
+                sh 'docker rm -f django_from_jenkins_container'
             }
     }
 }
