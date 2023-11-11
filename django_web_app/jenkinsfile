@@ -6,7 +6,8 @@ pipeline {
             steps {
                 // Your build steps go here
                 echo 'Building... now'
-                sh 'docker-compose up'
+                sh 'docker build -t django_from_jenkins .'
+                // sh 'docker-compose up -d'
 
             }
         }
