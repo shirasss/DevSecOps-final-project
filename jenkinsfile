@@ -1,13 +1,16 @@
 pipeline {
     agent any
-
+    environment {
+        dockerImageName = 'django_from_jenkins'
+        // artifactRegistry = 'your-artifact-registry-url' // Replace with your actual artifact registry URL
+    }
     stages {
         stage('Build') {
             steps {
                 // Your build steps go here
-                echo 'Building... now'
+                echo 'Building the Docker image'
                 dir('django_web_app') {
-                        sh 'docker-compose up -d'
+                        sh 'docker build -t django_from_jenkins .'
                     }
                 // sh 'docker build -t django_from_jenkins  .'
                 // sh 'docker-compose up -d'
@@ -18,7 +21,21 @@ pipeline {
         stage('Test') {
             steps {
                 // Your test steps go here
-                echo 'Testing...'
+                echo 'Running Django tests'
+                dir('django_web_app') {
+                        sh 'docker build -t django_from_jenkins .'
+                        sh "docker run --rm ${dockerImageName} python manage.py test"
+                    
+                        echo 'Checking for a successful response (200 OK) when accessing the application'
+                        sh "docker run --rm -p 8000:8000 -d --name test-container ${dockerImageName}"
+                        sleep 10  // Wait for the application to start (adjust as needed)
+                        def responseCode = sh(script: "curl -s -o /dev/null -w '%{http_code}' http://localhost:8000", returnStatus: true)
+                    
+                        if (responseCode == 200) {
+                            echo 'Application response: 200 OK'
+                        } else {
+                          error "Application response: ${responseCode}"
+                    }
             }
         }
 
