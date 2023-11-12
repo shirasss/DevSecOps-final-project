@@ -31,8 +31,7 @@ pipeline {
         stage('Push to Artifact Registry') {
             steps {
                 echo 'Pushing the Docker image to Artifact Registry'
-                def commitHash = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-
+                def commitMessage = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
                 sh "docker tag ${dockerImageName} ${artifactRegistryImage}:${commitHash}"
                 sh "docker push ${artifactRegistryImage}:${commitHash}"
             }
