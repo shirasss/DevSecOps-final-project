@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         dockerImageName = 'django_from_jenkins'
-        artifactRegistryImage = "me-west1-docker.pkg.dev/devconnect-project/shira-shani-artifacts/devconnect"
+        artifactRegistryImage = "me-west1-docker.pkg.dev/devconnect-project/shira-shani-artifacts/devconnect:v3.0.0"
         containerName = "django_container"
     }
     stages {
@@ -37,8 +37,8 @@ pipeline {
                 echo 'Pushing the Docker image to Artifact Registry'
                 script {
                     // def commitMessage = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
-                    sh "docker tag $dockerImageName $artifactRegistryImage:v3.0.0"
-                    sh "docker push $artifactRegistryImage:$commitMessage:v3.0.0"
+                    sh "docker tag $dockerImageName $artifactRegistryImage"
+                    sh "docker push $artifactRegistryImage:$commitMessage"
                 }
             }
         }
