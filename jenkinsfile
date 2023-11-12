@@ -36,9 +36,9 @@ pipeline {
             steps {
                 echo 'Pushing the Docker image to Artifact Registry'
                 script {
-                    def commitMessage = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
-                    sh "docker tag $dockerImageName $artifactRegistryImage:$commitMessage"
-                    sh "docker push $artifactRegistryImage:$commitMessage"
+                    // def commitMessage = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
+                    sh "docker tag $dockerImageName $artifactRegistryImage:v3.0.0"
+                    sh "docker push $artifactRegistryImage:$commitMessage:v3.0.0"
                 }
             }
         }
