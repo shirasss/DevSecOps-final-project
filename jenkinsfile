@@ -3,6 +3,7 @@ pipeline {
     environment {
         dockerImageName = 'django_from_jenkins'
         artifact_registry_image="me-west1-docker.pkg.dev/devconnect-project/shira-shani-artifacts/devconnect:v2.0.0"
+        CONTAINER_NAME="django_container"
     }
     stages {
         stage('Build') {
@@ -17,10 +18,12 @@ pipeline {
         stage('Testing the app') {
             steps {
                 echo 'Running Django tests'
-                sh 'docker run --name django_container4 -d -p 5034:8000 django_from_jenkins '
+                sh 'docker stop $CONTAINER_NAME'
+                sh 'docker rm $CONTAINER_NAME'
+                sh 'docker run --name $CONTAINER_NAME -d -p 5035:8000 django_from_jenkins '
                 // Run the Django tests
                 dir('django_web_app') {
-                    sh 'docker exec django_container4 python manage.py test'
+                    sh 'docker exec $CONTAINER_NAME python manage.py test'
                 }
 
                 // Check for a 200 (OK) response when trying to access the app using curl
