@@ -21,7 +21,7 @@ pipeline {
                 dir('django_web_app') {
                     // Run the Django tests
                     // Check for a 200 (OK) response when trying to access the app
-                    sh 'python3 manage.py test'
+                    sh 'docker run --rm django_from_jenkins python manage.py test'
 
         // Check for a 200 (OK) response when trying to access the app
                     httpGet url: 'http://localhost:8000/', expectStatusCode: 200
