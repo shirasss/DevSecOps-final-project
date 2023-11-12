@@ -14,3 +14,5 @@ if [ -n "$container_id" ]; then
     echo "Docker container with ID $container_id has been removed."
 else
     echo "No Docker container found for removal."
+
+

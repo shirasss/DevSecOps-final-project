@@ -3,14 +3,14 @@
 appname=devconnect
 echo "enter the version"
 read version 
-image_name=django-update:latest
-
+local_image_name=django-app
 
 gcloud auth login
-artifact_registry_image=me-west1-docker.pkg.dev/devconnect-final-project/shira-shani-artifacts/${appname}:${version}
-docker tag ${image_name} ${artifact_registry_image} 
+artifact_registry_image=me-west1-docker.pkg.dev/devconnect-project/shira-shani-artifacts/${appname}:${version}
+docker tag ${local_image_name} ${artifact_registry_image} 
 docker push ${artifact_registry_image}
 
+# gcloud container clusters create shira-shani-cluster --num-nodes=1
 
 # apiVersion: apps/v1
 # kind: Deployment

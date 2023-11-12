@@ -3,7 +3,7 @@ image_name=jenkins
 local_image_name=jenkins_push
 echo "enter the version"
 read version
-artifact_registry_image=me-west1-docker.pkg.dev/devconnect-final-project/shira-shani-artifacts/${image_name}:${version}
+artifact_registry_image=me-west1-docker.pkg.dev/devconnect-project/shira-shani-artifacts/${image_name}:${version}
 
 
 gcloud auth login
