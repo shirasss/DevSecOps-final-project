@@ -2,11 +2,8 @@ pipeline {
     agent any
     environment {
         dockerImageName = 'django_from_jenkins'
-        artifactRegistryImage = "me-west1-docker.pkg.dev/devconnect-project/shira-shani-artifacts/devconnect"
+        artifactRegistryImage = "me-west1-docker.pkg.dev/devconnect-project/shira-shani-artifacts/devconnect:v3.0.0"
         containerName = "django_container"
-    }
-    triggers {
-        pollSCM('*/10 * * * *')
     }
     stages {
         stage('Build') {
@@ -14,7 +11,7 @@ pipeline {
                 echo 'Building the Docker image'
                 dir('django_web_app') {
                     script {
-                        sh "docker build -t $dockerImageName ."
+                        sh 'docker build -t $dockerImageName .'
                     }
                 }
             }
@@ -31,12 +28,6 @@ pipeline {
                     dir('django_web_app') {
                         sh "docker exec $containerName python manage.py test"
                     }
-                    def httpResponse = sh(script: 'curl -s -o /dev/null -w %{http_code} http://localhost:5035/', returnStatus: true).trim()
-                    if (httpResponse == '200') {
-                        echo 'Tests passed and app is accessible!'
-                    } else {
-                        error 'Tests failed or app is not accessible!'
-                    }
                 }
             }
         }
@@ -45,9 +36,9 @@ pipeline {
             steps {
                 echo 'Pushing the Docker image to Artifact Registry'
                 script {
-                    def commitMessage = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
-                    sh "docker tag $dockerImageName $artifactRegistryImage:$commitMessage"
-                    sh "docker push $artifactRegistryImage:$commitMessage"
+                    // def commitMessage = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
+                    sh "docker tag $dockerImageName $artifactRegistryImage"
+                    sh "docker push $artifactRegistryImage"
                 }
             }
         }
@@ -56,7 +47,6 @@ pipeline {
             steps {
                 echo 'Deploying...'
                 // Add deployment steps here
-                // This stage is currently empty. Add deployment steps as per your deployment process.
             }
         }
     }
@@ -66,11 +56,7 @@ pipeline {
             echo 'Pipeline succeeded!'
         }
         failure {
-            echo 'Pipeline failed! :('
+            echo 'Pipeline failed!'
         }
-    }
-
-    options {
-        buildDiscarder(logRotator(numToKeepStr: '3'))
     }
 }
