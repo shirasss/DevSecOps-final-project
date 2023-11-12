@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         dockerImageName = 'django_from_jenkins'
-        artifact_registry_image="me-west1-docker.pkg.dev/devconnect-project/shira-shani-artifacts/devconnect:v2.0.0"
+        artifact_registry_image="me-west1-docker.pkg.dev/devconnect-project/shira-shani-artifacts/devconnect"
         CONTAINER_NAME="django_container"
     }
     stages {
@@ -25,23 +25,15 @@ pipeline {
                 dir('django_web_app') {
                     sh 'docker exec $CONTAINER_NAME python manage.py test'
                 }
-
-                // Check for a 200 (OK) response when trying to access the app using curl
-                // script {
-                //     def responseCode = sh(script: 'curl -s -o /dev/null -w "%{http_code}" http://localhost:5025/', returnStatus: true).toString().trim()
-                //     if (responseCode == '200') {
-                //         echo 'App is accessible. Proceeding to the next stage.'
-                //     } else {
-                //         error "App is not accessible. Received HTTP response code: ${responseCode}"
-                //     }
-                // }
             }
         }
          stage('Push to Artifact Registry') {
             steps {
                 echo 'Pushing the Docker image to Artifact Registry'
-                sh "docker tag $dockerImageName $artifact_registry_image"
-                sh "docker push $artifact_registry_image"
+                def commitHash = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+
+                sh "docker tag $dockerImageName $artifact_registry_image:${commitHash}"
+                sh "docker push $artifact_registry_image:${commitHash}"
             }
         }
 
