@@ -2,8 +2,8 @@ pipeline {
     agent any
     environment {
         dockerImageName = 'django_from_jenkins'
-        artifact_registry_image="me-west1-docker.pkg.dev/devconnect-project/shira-shani-artifacts/devconnect"
-        CONTAINER_NAME="django_container"
+        artifactRegistryImage = "me-west1-docker.pkg.dev/devconnect-project/shira-shani-artifacts/devconnect"
+        containerName = "django_container"
     }
     stages {
         stage('Build') {
@@ -18,22 +18,23 @@ pipeline {
         stage('Testing the app') {
             steps {
                 echo 'Running Django tests'
-                sh 'docker stop $CONTAINER_NAME'
-                sh 'docker rm $CONTAINER_NAME'
-                sh 'docker run --name $CONTAINER_NAME -d -p 5035:8000 django_from_jenkins '
+                sh "docker stop ${containerName}"
+                sh "docker rm ${containerName}"
+                sh "docker run --name ${containerName} -d -p 5035:8000 ${dockerImageName}"
                 // Run the Django tests
                 dir('django_web_app') {
-                    sh 'docker exec $CONTAINER_NAME python manage.py test'
+                    sh "docker exec ${containerName} python manage.py test"
                 }
             }
         }
-         stage('Push to Artifact Registry') {
+
+        stage('Push to Artifact Registry') {
             steps {
                 echo 'Pushing the Docker image to Artifact Registry'
                 def commitHash = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
 
-                sh "docker tag $dockerImageName $artifact_registry_image:${commitHash}"
-                sh "docker push $artifact_registry_image:${commitHash}"
+                sh "docker tag ${dockerImageName} ${artifactRegistryImage}:${commitHash}"
+                sh "docker push ${artifactRegistryImage}:${commitHash}"
             }
         }
 
