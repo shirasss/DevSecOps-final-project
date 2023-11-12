@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         dockerImageName = 'django_from_jenkins'
+        artifact_registry_image=me-west1-docker.pkg.dev/devconnect-project/shira-shani-artifacts/devconnect:v2.0.0
     }
     stages {
         stage('Build') {
@@ -31,6 +32,13 @@ pipeline {
                 //         error "App is not accessible. Received HTTP response code: ${responseCode}"
                 //     }
                 // }
+            }
+        }
+         stage('Push to Artifact Registry') {
+            steps {
+                echo 'Pushing the Docker image to Artifact Registry'
+                sh "docker tag $dockerImageName $artifact_registry_image"
+                sh "docker push $artifact_registry_image"
             }
         }
 
