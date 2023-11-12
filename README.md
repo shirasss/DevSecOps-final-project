@@ -53,6 +53,7 @@
 
     
     
+
 <h2>Usage :</h2>
 
     python django_web_app/manage.py makemigrations
