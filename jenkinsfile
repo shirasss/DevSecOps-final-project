@@ -6,7 +6,7 @@ pipeline {
         containerName = "django_container"
     }
     triggers {
-        pollSCM('* * * * *')
+        pollSCM('*/10 * * * *')
     }
     stages {
         stage('Build') {
@@ -14,7 +14,7 @@ pipeline {
                 echo 'Building the Docker image'
                 dir('django_web_app') {
                     script {
-                        sh 'docker build -t $dockerImageName .'
+                        sh "docker build -t $dockerImageName ."
                     }
                 }
             }
