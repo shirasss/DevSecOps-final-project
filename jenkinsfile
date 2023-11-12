@@ -1,0 +1,52 @@
+pipeline {
+    agent any
+    environment {
+        dockerImageName = 'django_from_jenkins'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building the Docker image'
+                dir('django_web_app') {
+                    sh 'docker build -t django_from_jenkins .'
+                }
+            }
+        }
+
+        stage('Testing the app') {
+            steps {
+                echo 'Running Django tests'
+                sh 'docker run -d -p 8000:8000 --name django_from_jenkinss_container django_from_jenkins '
+
+                dir('django_web_app') {
+                    // Run the Django tests
+                    // Check for a 200 (OK) response when trying to access the app
+                    sh 'python3 manage.py test'
+
+        // Check for a 200 (OK) response when trying to access the app
+                    httpGet url: 'http://localhost:8000/', expectStatusCode: 200
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying...'
+                // Add deployment steps here
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline succeeded!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+        always {
+                // Remove the django_from_jenkinss_container by name
+                sh 'docker rm -f django_from_jenkins_container'
+            }
+    }
+}
