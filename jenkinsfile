@@ -25,8 +25,8 @@ pipeline {
             steps {
                 echo 'Running Django tests'
                 script {
-                    sh "docker stop $containerName || true"
-                    sh "docker rm $containerName || true"
+                    // sh "docker stop $containerName || true"
+                    // sh "docker rm $containerName || true"
                     sh "docker run --name $containerName -d -p 5000:8000 $dockerImageName:$commitHas"
                     // Run the Django tests
                     dir('django_web_app') {
