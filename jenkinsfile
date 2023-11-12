@@ -27,7 +27,7 @@ pipeline {
                 script {
                     sh "docker stop $containerName || true"
                     sh "docker rm $containerName || true"
-                    sh "docker run --name $containerName -d -p 5035:8000 $dockerImageName"
+                    sh "docker run --name $containerName -d -p 5035:8000 $dockerImageName:$commitHash"
                     // Run the Django tests
                     dir('django_web_app') {
                         sh "docker exec $containerName python manage.py test"
