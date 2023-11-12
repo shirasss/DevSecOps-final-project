@@ -16,7 +16,7 @@ pipeline {
         stage('Testing the app') {
             steps {
                 echo 'Running Django tests'
-                sh 'docker run -d -p 5023:8000 django_from_jenkins '
+                sh 'docker run -d -p 5024:8000 django_from_jenkins '
                 
                 // Run the Django tests
                 dir('django_web_app') {
@@ -25,7 +25,7 @@ pipeline {
 
                 // Check for a 200 (OK) response when trying to access the app using curl
                 script {
-                    def responseCode = sh(script: 'curl -s -o /dev/null -w "%{http_code}" http://localhost:5023/', returnStatus: true).trim()
+                    def responseCode = sh(script: 'curl -s -o /dev/null -w "%{http_code}" http://localhost:5024/', returnStatus: true).trim()
                     if (responseCode == '200') {
                         echo 'App is accessible. Proceeding to the next stage.'
                     } else {
