@@ -16,7 +16,7 @@ pipeline {
         stage('Testing the app') {
             steps {
                 echo 'Running Django tests'
-                sh 'docker run -d -p 8000:8000 --name django_from_jenkinss_container django_from_jenkins '
+                sh 'docker run -d -p 8000:8000 django_from_jenkins '
 
                 dir('django_web_app') {
                     // Run the Django tests
