@@ -38,7 +38,7 @@ pipeline {
                 script {
                     // def commitMessage = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
                     sh "docker tag $dockerImageName $artifactRegistryImage"
-                    sh "docker push $artifactRegistryImage:$commitMessage"
+                    sh "docker push $artifactRegistryImage"
                 }
             }
         }
