@@ -25,8 +25,12 @@ pipeline {
             steps {
                 echo 'Running Django tests'
                 script {
-                    sh "docker stop $containerName || true"
-                    sh "docker rm $containerName || true"
+                    def containerExists = sh(script: "docker ps -q --filter name=$containerName", returnStatus: true).isSuccess()
+                    if (containerExists) {
+                    // Stop and remove the container only if it exists
+                    sh "docker stop $containerName"
+                    sh "docker rm $containerName"
+                }
                     sh "docker run --name $containerName -d -p 5035:8000 $dockerImageName:$commitHash"
                     // Run the Django tests
                     dir('django_web_app') {
