@@ -7,9 +7,8 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building the Docker image'
-                dir('django_web_app') {
                     sh 'docker build -t django_from_jenkins .'
-                }
+                
             }
         }
 
@@ -17,15 +16,12 @@ pipeline {
             steps {
                 echo 'Running Django tests'
                 sh 'docker run -d -p 8000:8000 --name django_from_jenkinss_container django_from_jenkins '
-
-                dir('django_web_app') {
+                
                     // Run the Django tests
                     // Check for a 200 (OK) response when trying to access the app
                     sh 'python3 manage.py test'
-
-        // Check for a 200 (OK) response when trying to access the app
                     httpGet url: 'http://localhost:8000/', expectStatusCode: 200
-                }
+                
             }
         }
 
