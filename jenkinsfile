@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         dockerImageName = 'django_from_jenkins'
-        artifact_registry_image=me-west1-docker.pkg.dev/devconnect-project/shira-shani-artifacts/devconnect:v2.0.0
+        artifact_registry_image="me-west1-docker.pkg.dev/devconnect-project/shira-shani-artifacts/devconnect:v2.0.0"
     }
     stages {
         stage('Build') {
