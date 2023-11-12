@@ -3,7 +3,7 @@ pipeline {
     environment {
         dockerImageName = 'django_from_jenkins'
         artifactRegistryImage = "me-west1-docker.pkg.dev/devconnect-project/shira-shani-artifacts/devconnect"
-        containerName = "django_container"
+        containerName = "django_container2"
     }
     stages {
         stage('Build') {
@@ -13,7 +13,6 @@ pipeline {
                     script {
                         // Extract the commit hash
                         def commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-
                         // Build the Docker image with the commit hash as the version tag
                         sh "docker build -t $dockerImageName:$commitHash ."
                     }
