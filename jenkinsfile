@@ -16,11 +16,10 @@ pipeline {
         stage('Testing the app') {
             steps {
                 echo 'Running Django tests'
-                sh 'docker run -d -p 5027:8000 django_from_jenkins '
-                
+                sh 'docker run --name django_container -d -p 5027:8000 django_from_jenkins '
                 // Run the Django tests
                 dir('django_web_app') {
-                    sh 'docker exec django_from_jenkins python manage.py test'
+                    sh 'docker exec django_container python manage.py test'
                 }
 
                 // Check for a 200 (OK) response when trying to access the app using curl
