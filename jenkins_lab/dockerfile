@@ -26,12 +26,14 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.c
 # Update and install the Google Cloud SDK
 RUN apt-get update && apt-get install -y google-cloud-sdk
 
+
 # Make sure the 'jenkins' user can run Docker commands
 RUN usermod -aG docker jenkins
 
 
 EXPOSE 8080
 USER jenkins
+
 
 
 
