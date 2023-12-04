@@ -20,7 +20,7 @@
      <li>Users can see the shared files by other users also in uploaded files.</li>
 </ol>
 
-<h4>Additional Features:</h4>
+<h4>Additional Features!:</h4>
 <ol>
     <li>In users profile user can set his/her profile picture.</li>
     <li>Users can download other users uploaded files.</li>
