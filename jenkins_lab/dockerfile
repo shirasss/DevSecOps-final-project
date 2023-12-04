@@ -31,6 +31,7 @@ RUN apt-get update && apt-get install -y google-cloud-sdk
 RUN usermod -aG docker jenkins
 
 
+
 EXPOSE 8080
 USER jenkins
 
