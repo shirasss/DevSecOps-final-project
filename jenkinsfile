@@ -37,7 +37,6 @@ pipeline {
                     def commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 
                     sh "docker tag $dockerImageName:$commitHash $artifactRegistryImage:$commitHash"
-                    sh "docker push $artifactRegistryImage:$commitHash"
                 }
             }
         }
