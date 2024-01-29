@@ -1,4 +1,5 @@
 # Django-WebApp       <img alt="GitHub" src="https://img.shields.io/github/license/smahesh29/Django-WebApp">
+![image](https://github.com/shirasss/DevSecOps-final-project/assets/113446054/6ff8a09c-cf3a-445d-bfc2-44bf2459a309)
 
 <h1>DevConnect Web App!</h1>
 

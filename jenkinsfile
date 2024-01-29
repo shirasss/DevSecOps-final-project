@@ -29,24 +29,22 @@ pipeline {
                 }
             }
         }
-        // stage('Push to Artifact Registry') {
-        //     steps {
-        //         echo 'Pushing the Docker image to Artifact Registry'
-        //         script {
-        //             // Use the commit hash as the version tag
-        //             def commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+        stage('Push to Artifact Registry') {
+            steps {
+                echo 'Pushing the Docker image to Artifact Registry'
+                script {
+                    // Use the commit hash as the version tag
+                    def commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 
-        //             sh "docker tag $dockerImageName:$commitHash $artifactRegistryImage:$commitHash"
-        //             sh "docker push $artifactRegistryImage:$commitHash"
-        //         }
-        //     }
-        // }
+                    sh "docker tag $dockerImageName:$commitHash $artifactRegistryImage:$commitHash"
+                }
+            }
+        }
 
         stage('Deploy') {
             steps {
                 echo 'Deploying...'
                 // Add deployment steps here
-                sh "gcloud container clusters get-credentials cluster --zone me-west1-a --project eco-tract-407114"
             }
         }
     }
