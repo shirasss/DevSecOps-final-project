@@ -46,6 +46,7 @@ pipeline {
                 echo 'Deploying...'
                 // Add deployment steps here
                 sh 'apt-get install kubectl'
+                sh " gcloud config set auth/disable_ssl_validation  True"
                 sh "gcloud container clusters get-credentials cluster --zone me-west1-a --project eco-tract-407114"
             }
         }
