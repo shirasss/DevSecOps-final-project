@@ -45,6 +45,7 @@ pipeline {
             steps {
                 echo 'Deploying...'
                 // Add deployment steps here
+                sh "gcloud container clusters get-credentials cluster --zone me-west1-a --project eco-tract-407114"
             }
         }
     }
